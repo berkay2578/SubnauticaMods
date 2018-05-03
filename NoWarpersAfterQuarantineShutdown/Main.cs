@@ -33,7 +33,7 @@ namespace NoWarpersAfterQuarantineShutdown {
       }
 
       public static void ApplyPatches() {
-         log("Loading... {0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
+         log("Loading... v{0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
          HarmonyInstance harmony = HarmonyInstance.Create("mod.berkay2578.disablewarpers");
          if (harmony != null)
