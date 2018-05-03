@@ -15,8 +15,9 @@ namespace NoWarpersAfterQuarantineShutdown {
                ErrorMessage.AddMessage("Self-Warping Quarantine Enforcer Units are now disabled.");
             }
             public static void AwakeGunDisabledCheck(StoryGoalCustomEventHandler __instance) {
-               if (Story.StoryGoalManager.main.IsGoalComplete(__instance.gunDeactivate.key))
-                  ManageStoryEvents.PrecursorGunDisabledNotification();
+               if (__instance.gunDeactivate.key != null)
+                  if (Story.StoryGoalManager.main.IsGoalComplete(__instance.gunDeactivate.key))
+                     ManageStoryEvents.PrecursorGunDisabledNotification();
             }
          }
       }
