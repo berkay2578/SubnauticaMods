@@ -2,7 +2,7 @@
   "Id": "NoWarpersAfterQuarantineShutdown",
   "DisplayName": "No Warpers After Quarantine Shutdown",
   "Author": "berkay(2578)",
-  "Version": "1.0.0.1",
+  "Version": "1.1.0.0",
   "Requires": [
     "0Harmony.dll"
   ],
