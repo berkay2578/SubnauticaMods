@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+
 using Harmony;
 
 namespace NoWarpersAfterQuarantineShutdown {
@@ -26,9 +27,10 @@ namespace NoWarpersAfterQuarantineShutdown {
          }
          [HarmonyPostfix]
          public static void AwakeGunDisabledCheck(StoryGoalCustomEventHandler __instance) {
-            if (__instance.gunDeactivate != null && !String.IsNullOrEmpty(__instance.gunDeactivate.key))
-               if (Story.StoryGoalManager.main.IsGoalComplete(__instance.gunDeactivate.key))
-                  ManageStoryEvents.PrecursorGunDisabledNotification();
+            if (__instance != null
+               && __instance.gunDeactivate != null && !String.IsNullOrEmpty(__instance.gunDeactivate.key)
+               && Story.StoryGoalManager.main.IsGoalComplete(__instance.gunDeactivate.key))
+               ManageStoryEvents.PrecursorGunDisabledNotification();
          }
       }
 
@@ -40,44 +42,36 @@ namespace NoWarpersAfterQuarantineShutdown {
          {
             log("HarmonyInstance created.");
 
-            // StoryGoalCustomEventHandler.Awake (Post)
             {
                harmony.Patch(
                    typeof(StoryGoalCustomEventHandler).GetMethod("Awake", BindingFlags.NonPublic | BindingFlags.Instance),
                    null,
                    new HarmonyMethod(typeof(ManageStoryEvents).GetMethod("AwakeGunDisabledCheck"))
                );
-               log("StoryGoalCustomEventHandler.Awake (Post)");
-            }
+               log("Patched StoryGoalCustomEventHandler.Awake");
 
-            // StoryGoalCustomEventHandler.DisableGun (Post)
-            {
                harmony.Patch(
                    typeof(StoryGoalCustomEventHandler).GetMethod("DisableGun"),
                    null,
                    new HarmonyMethod(typeof(ManageStoryEvents).GetMethod("PrecursorGunDisabledNotification"))
                );
-               log("StoryGoalCustomEventHandler.DisableGun (Post)");
+               log("Patched StoryGoalCustomEventHandler.DisableGun");
             }
 
-            // WarperSpawner.OnEnable (Pre)
             {
                harmony.Patch(
                    typeof(WarperSpawner).GetMethod("OnEnable", BindingFlags.NonPublic | BindingFlags.Instance),
                    new HarmonyMethod(typeof(ManageWarperSpawns).GetMethod("GenericSkipExecutionPatch")),
                    null
                );
-               log("WarperSpawner.OnEnable (Pre)");
-            }
+               log("Patched WarperSpawner.OnEnable");
 
-            // WarperSpawner.Update (Pre)
-            {
                harmony.Patch(
                   typeof(WarperSpawner).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance),
                   new HarmonyMethod(typeof(ManageWarperSpawns).GetMethod("GenericSkipExecutionPatch")),
                   null
                );
-               log("WarperSpawner.Update (Pre)");
+               log("Patched WarperSpawner.Update");
             }
             log("Patched successfully.");
          }

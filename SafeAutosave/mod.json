@@ -1,0 +1,13 @@
+﻿{
+  "Id": "SafeAutosave",
+  "DisplayName": "Safe Autosave",
+  "Author": "berkay(2578)",
+  "Version": "1.0.0.0",
+  "Requires": [
+    "0Harmony.dll"
+  ],
+  "Enable": true,
+  "AssemblyName": "SafeAutosave.dll",
+  "EntryMethod": "SafeAutosave.Patcher.ApplyPatches",
+  "Priority": "Last"
+}

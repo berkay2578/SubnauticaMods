@@ -1,0 +1,82 @@
+<Settings>
+  <UnwantedCreatures>
+    <!-- Creature a 'Creature' structure to control that creature's spawn -->
+    <!--   
+         <Creature>
+            <Name>Creature's name goes here, it's cAsE SenSiTiVE</Name>
+            <SpawnConfiguration>
+               <CanSpawn>'true' or 'false'</CanSpawn>
+               <SpawnChanceOutOf100>'0' to '100'</SpawnChanceOutOf100>
+            </SpawnConfiguration>
+         </Creature>
+      -->
+    <!-- For example: -->
+    <Creature>
+      <Name>Biter</Name>
+      <SpawnConfiguration>
+        <CanSpawn>true</CanSpawn>
+        <!-- Enable/Disable the creature's spawn: `true` or `false` -->
+        <SpawnChanceOutOf100>50</SpawnChanceOutOf100>
+        <!-- Only used when CanSpawn is `true`. Range is from 0 to 100. -->
+      </SpawnConfiguration>
+    </Creature>
+    <Creature>
+      <Name>Peeper</Name>
+      <SpawnConfiguration>
+        <CanSpawn>false</CanSpawn>
+        <SpawnChanceOutOf100>100</SpawnChanceOutOf100>
+        <!-- This value is now ignored because CanSpawn is set to `false`. -->
+      </SpawnConfiguration>
+    </Creature>
+
+    <!--
+      Possible creature names: (Creatures' lava counterparts use their main creature's settings; e.g., EyeyeLava uses Eyeye's configuration)
+         Biter
+         BirdBehaviour
+         Bladderfish
+         Bleeder
+         BloomCreature
+         BoneShark
+         Boomerang
+         CaveCrawler
+         CrabSnake
+         CrabSquid
+         Crash
+         CuteFish
+         Eyeye
+         Garryfish
+         GasoPod
+         GhostLeviatanVoid
+         GhostLeviathan
+         GhostRay
+         Grabcrab
+         Grower
+         Holefish
+         Hoopfish
+         Hoverfish
+         Jellyray
+         Jumper
+         LavaLarva
+         LavaLizard
+         Leviathan
+         Mesmer
+         OculusFish
+         Peeper
+         RabbitRay
+         ReaperLeviathan
+         Reefback
+         Reginald
+         SandShark
+         SeaDragon
+         SeaEmperorBaby
+         SeaEmperorJuvenile
+         SeaTreader
+         Shocker
+         Slime
+         Spadefish
+         SpineEel
+         Stalker
+         Warper
+      -->
+  </UnwantedCreatures>
+</Settings>

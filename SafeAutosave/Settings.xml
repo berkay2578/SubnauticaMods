@@ -1,0 +1,15 @@
+<!-- PauseIntervalInSeconds has to be at least 10 seconds -->
+<Settings>
+  <PlayerBase>
+    <SaveOnEntry>true</SaveOnEntry>
+    <SaveOnExit>true</SaveOnExit>
+    <SaveEvenWhenFloodedOrDamaged>false</SaveEvenWhenFloodedOrDamaged>
+    <PauseIntervalInSeconds>10.0</PauseIntervalInSeconds>
+  </PlayerBase>
+  <Cyclops>
+    <SaveOnEntry>true</SaveOnEntry>
+    <SaveOnExit>true</SaveOnExit>
+    <SaveEvenWhenFloodedOrDamaged>false</SaveEvenWhenFloodedOrDamaged>
+    <PauseIntervalInSeconds>10.0</PauseIntervalInSeconds>
+  </Cyclops>
+</Settings>

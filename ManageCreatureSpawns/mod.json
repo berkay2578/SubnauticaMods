@@ -1,0 +1,13 @@
+﻿{
+  "Id": "ManageCreatureSpawns",
+  "DisplayName": "Manage Creature Spawns",
+  "Author": "berkay(2578)",
+  "Version": "1.1.0.0",
+  "Requires": [
+    "0Harmony.dll"
+  ],
+  "Enable": true,
+  "AssemblyName": "ManageCreatureSpawns.dll",
+  "EntryMethod": "ManageCreatureSpawns.Patcher.ApplyPatches",
+  "Priority": "Last"
+}
