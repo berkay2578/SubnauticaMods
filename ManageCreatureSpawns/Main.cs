@@ -16,41 +16,47 @@ namespace ManageCreatureSpawns {
          Console.WriteLine("[ManageCreatureSpawns] {0}", logMessage);
       }
 
+      public static HarmonyInstance harmony = null;
       public static Random rEngine = new Random();
       public static SettingsManager.Settings settings = null;
 
       public static class Manager {
          public static bool TryKillCreature(Creature creature) {
             if (creature != null && creature.enabled
-               && creature.gameObject != null
-               && creature.liveMixin != null && creature.liveMixin.IsAlive())
+               && creature.gameObject != null)
             {
-               var creatureConfiguration = settings.UnwantedCreaturesList.FirstOrDefault(c => creature.gameObject.name.Contains(c.Name));
+               var creatureConfiguration = settings.UnwantedCreaturesList.FirstOrDefault(c =>
+                  c.Name.ToLowerInvariant() == creature.name.Replace("(Clone)", String.Empty).ToLowerInvariant());
                if (creatureConfiguration != null)
                {
                   if (!creatureConfiguration.SpawnConfiguration.CanSpawn
                      || rEngine.Next(0, 100) <= creatureConfiguration.SpawnConfiguration.SpawnChance)
                   {
-                     creature.gameObject.SetActive(false);
+                     creature.tag = "Untagged";
+                     creature.leashPosition = UnityEngine.Vector3.zero;
+
                      CreatureDeath cDeath = creature.gameObject.GetComponent<CreatureDeath>();
                      if (cDeath != null)
                      {
                         cDeath.eatable = null;
                         cDeath.respawn = false;
-                        cDeath.removeCorpseAfterSeconds = 0.1f;
+                        cDeath.removeCorpseAfterSeconds = 1.0f;
                      }
-
-                     creature.leashPosition = UnityEngine.Vector3.zero;
-                     if (creature.liveMixin.data != null)
+                     if (creature.liveMixin != null && creature.liveMixin.IsAlive())
                      {
-                        creature.liveMixin.data.deathEffect = null;
-                        creature.liveMixin.data.passDamageDataOnDeath = false;
-                        creature.liveMixin.data.broadcastKillOnDeath = true;
-                        creature.liveMixin.data.destroyOnDeath = true;
-                        creature.liveMixin.data.explodeOnDestroy = false;
+                        if (creature.liveMixin.data != null)
+                        {
+                           creature.liveMixin.data.deathEffect = null;
+                           creature.liveMixin.data.passDamageDataOnDeath = false;
+                           creature.liveMixin.data.broadcastKillOnDeath = true;
+                           creature.liveMixin.data.destroyOnDeath = true;
+                           creature.liveMixin.data.explodeOnDestroy = false;
+                        }
+                        creature.liveMixin.Kill();
+                     } else
+                     {
+                        creature.BroadcastMessage("OnKill");
                      }
-
-                     creature.liveMixin.Kill();
                      return true;
                   }
                }
@@ -79,7 +85,7 @@ namespace ManageCreatureSpawns {
       public static void ApplyPatches() {
          log("Loading... v{0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-         HarmonyInstance harmony = HarmonyInstance.Create("mod.berkay2578.managecreaturespawns");
+         harmony = HarmonyInstance.Create("mod.berkay2578.managecreaturespawns");
          if (harmony != null)
          {
             log("HarmonyInstance created.");
@@ -141,10 +147,8 @@ namespace ManageCreatureSpawns {
                   log("Patched Creature.{0}", fn);
                }
             }
-
             log("Finished.");
-         }
-         else
+         } else
          {
             log("HarmonyInstance() returned null.");
          }
