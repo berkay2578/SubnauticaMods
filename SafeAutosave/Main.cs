@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Xml.Serialization;
@@ -21,13 +22,21 @@ namespace SafeAutosave {
       public static SettingsManager.Settings settings = null;
 
       public static class SaveManager {
-         public static float timeSinceLastSave = 0.0f;
+         public static System.Timers.Timer retryDummy = new System.Timers.Timer() {
+            Interval = 4000,
+            Enabled = false
+         };
+         public static int retryDummy_TryCount = 3;
+         public static float retryDummy_LastPauseIntervalInSeconds = 10.0f;
+
+         public static float timeOfLastSave = 0.0f;
 
          public static MethodInfo mi_fnGetAllowSaving = null;
-         public static void ForceSave(float pauseIntervalInSeconds = 10.0f) {
+         public static MethodInfo mi_fnSaveGameAsync = null;
+         public static void ForceSave(float pauseIntervalInSeconds = 10.0f, bool isCalledFromTimer = false) {
             pauseIntervalInSeconds = pauseIntervalInSeconds < 10.0f ? 10.0f : pauseIntervalInSeconds;
             if ((UnityEngine.Time.timeSinceLevelLoad - pauseIntervalInSeconds) < 0.0f
-               || (UnityEngine.Time.timeSinceLevelLoad - timeSinceLastSave) < 10.0f)
+               || (UnityEngine.Time.timeSinceLevelLoad - timeOfLastSave) < 10.0f)
             {
                log("Not enough time has passed to save, skipping autosave!", true);
                return;
@@ -44,18 +53,58 @@ namespace SafeAutosave {
                   return;
                }
             }
-
-            log("Saving...", true);
-            if (!(bool)mi_fnGetAllowSaving.Invoke(IngameMenu.main, null))
+            if (mi_fnSaveGameAsync == null)
             {
-               log("IngameMenu.main.GetAllowSaving() return false, skipping autosave!");
-               ErrorMessage.AddDebug("[SafeAutosave] Game does not allow saving currently, skipped autosave!");
-               return;
+               log("mi_fnSaveGameAsync is null, loading MethodInfo.");
+               mi_fnSaveGameAsync = typeof(IngameMenu).GetMethod("SaveGameAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+               if (mi_fnSaveGameAsync == null)
+               {
+                  log("mi_fnSaveGameAsync is still null, skipping autosave!");
+                  ErrorMessage.AddDebug("[SafeAutosave] Could not autosave.");
+                  return;
+               }
             }
 
-            IngameMenu.main.SaveGame();
-            timeSinceLastSave = UnityEngine.Time.time;
-            log("Saved successfully!", true);
+            log("Saving...");
+            if (!(bool)mi_fnGetAllowSaving.Invoke(IngameMenu.main, null))
+            {
+               log("IngameMenu.main.GetAllowSaving() returned false.");
+               if (!isCalledFromTimer)
+               {
+                  log("Game does not allow saving currently, trying every 4 seconds for 3 times.", true);
+                  retryDummy_TryCount = 3;
+                  retryDummy_LastPauseIntervalInSeconds = pauseIntervalInSeconds;
+
+                  retryDummy.Elapsed += trySavingAgain;
+                  retryDummy.Start();
+                  ;
+               } else
+               {
+                  log("Try {0} failed.", false, retryDummy_TryCount.ToString());
+                  retryDummy_TryCount--;
+               }
+
+               return;
+            }
+            if (isCalledFromTimer)
+            {
+               retryDummy.Stop();
+               retryDummy.Elapsed -= trySavingAgain;
+            }
+
+            UWE.CoroutineHost.StartCoroutine((IEnumerator)mi_fnSaveGameAsync.Invoke(IngameMenu.main, null));
+            timeOfLastSave = UnityEngine.Time.timeSinceLevelLoad;
+            log("Saved successfully!");
+         }
+         public static void trySavingAgain(object sender, System.Timers.ElapsedEventArgs e) {
+            if (retryDummy_TryCount > 0)
+            {
+               ForceSave(retryDummy_LastPauseIntervalInSeconds, true);
+            } else
+            {
+               log("Failed after trying for 3 times.", true);
+               retryDummy.Stop();
+            }
          }
 
          [HarmonyPostfix]
