@@ -163,7 +163,7 @@ namespace SafeAutosave {
                      return;
                   }
 
-                  ForceSave();
+                  ForceSave(settings.PlayerBase.PauseIntervalInSeconds);
                } else if (__instance.isCyclops && settings.Cyclops.SaveOnExit)
                {
                   // Get SubRoot.live
@@ -185,7 +185,7 @@ namespace SafeAutosave {
                      return;
                   }
 
-                  ForceSave();
+                  ForceSave(settings.Cyclops.PauseIntervalInSeconds);
                }
             }
          }
