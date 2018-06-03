@@ -35,7 +35,7 @@ namespace SafeAutosave {
          public static MethodInfo mi_fnSaveGameAsync = null;
          public static void ForceSave(float pauseIntervalInSeconds = 10.0f, bool isCalledFromTimer = false) {
             pauseIntervalInSeconds = pauseIntervalInSeconds < 10.0f ? 10.0f : pauseIntervalInSeconds;
-            if ((UnityEngine.Time.timeSinceLevelLoad - pauseIntervalInSeconds) < 0.0f
+            if ((UnityEngine.Time.timeSinceLevelLoad - (timeOfLastSave + pauseIntervalInSeconds)) < 0.0f
                || (UnityEngine.Time.timeSinceLevelLoad - timeOfLastSave) < 10.0f)
             {
                log("Not enough time has passed to save, skipping autosave!", true);
