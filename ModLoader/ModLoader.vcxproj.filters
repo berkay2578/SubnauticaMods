@@ -21,7 +21,7 @@
     <ClInclude Include="Helpers\MonoTypes.h">
       <Filter>Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Helpers\DetourHelper.hpp">
+    <ClInclude Include="Helpers\DetourHelper64.hpp">
       <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>

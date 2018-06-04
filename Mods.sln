@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeAutosave", "SafeAutosav
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModLoader", "ModLoader\ModLoader.vcxproj", "{C1045335-221B-4DA1-8898-AEA48E139D18}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModLoaderProxy", "ModLoaderProxy\ModLoaderProxy.vcxproj", "{1026972D-A581-4109-99BF-C33A6512925F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,17 @@ Global
 		{C1045335-221B-4DA1-8898-AEA48E139D18}.Release|x64.Build.0 = Release|x64
 		{C1045335-221B-4DA1-8898-AEA48E139D18}.Release|x86.ActiveCfg = Release|Win32
 		{C1045335-221B-4DA1-8898-AEA48E139D18}.Release|x86.Build.0 = Release|Win32
+		{1026972D-A581-4109-99BF-C33A6512925F}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{1026972D-A581-4109-99BF-C33A6512925F}.Debug|x64.ActiveCfg = Debug|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Debug|x64.Build.0 = Debug|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Debug|x86.ActiveCfg = Debug|Win32
+		{1026972D-A581-4109-99BF-C33A6512925F}.Debug|x86.Build.0 = Debug|Win32
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|Any CPU.ActiveCfg = Release|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|Any CPU.Build.0 = Release|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|x64.ActiveCfg = Release|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|x64.Build.0 = Release|x64
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|x86.ActiveCfg = Release|Win32
+		{1026972D-A581-4109-99BF-C33A6512925F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
