@@ -26,7 +26,7 @@
       <Name>PEEper</Name>
       <SpawnConfiguration>
         <CanSpawn>false</CanSpawn>
-        <!-- SpawnChaneOutOf100 is now ignored because CanSpawn is set to `false`. -->
+        <!-- SpawnChanceOutOf100 is now ignored because CanSpawn is set to `false`. -->
         <SpawnChanceOutOf100>100</SpawnChanceOutOf100>
       </SpawnConfiguration>
     </Creature>
