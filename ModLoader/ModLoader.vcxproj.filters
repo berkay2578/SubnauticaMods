@@ -24,5 +24,8 @@
     <ClInclude Include="Helpers\DetourHelper64.hpp">
       <Filter>Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Helpers\Logger.hpp">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

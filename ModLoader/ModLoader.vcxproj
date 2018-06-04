@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Helpers\DetourHelper64.hpp" />
+    <ClInclude Include="Helpers\Logger.hpp" />
     <ClInclude Include="Helpers\MonoTypes.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
