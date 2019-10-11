@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -7,12 +7,12 @@ namespace ManageCreatureSpawns {
       [Serializable()]
       [XmlRoot("SpawnConfiguration")]
       public class SpawnConfiguration {
-         [XmlElement("CanSpawn")]
-         public bool CanSpawn { get; set; } = true;
-
          [XmlElement("SpawnChanceOutOf100")]
          public int SpawnChance { get; set; } = 100;
-      }
+
+         [XmlElement("CanRespawn")]
+         public bool CanRespawn { get; set; } = true;
+		}
 
       [Serializable()]
       [XmlRoot("Creature")]
@@ -29,11 +29,11 @@ namespace ManageCreatureSpawns {
                "Creature {{\r\n" +
                "  Name: {0}\r\n" +
                "  SpawnConfiguration {{\r\n" +
-               "     CanSpawn:    {1}\r\n" +
-               "     SpawnChance: {2}\r\n" +
-               "  }}\r\n" +
+               "     SpawnChance: {1}\r\n" +
+			   "     CanRespawn: {2}\r\n" +
+			   "  }}\r\n" +
                "}}",
-               Name, SpawnConfiguration.CanSpawn, SpawnConfiguration.SpawnChance);
+               Name, SpawnConfiguration.SpawnChance, SpawnConfiguration.CanRespawn);
          }
       }
 
