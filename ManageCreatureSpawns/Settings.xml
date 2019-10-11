@@ -6,8 +6,8 @@
          <Creature>
             <Name>Creature's name goes here</Name>
             <SpawnConfiguration>
-               <CanSpawn>'true' or 'false'</CanSpawn>
                <SpawnChanceOutOf100>'0' to '100'</SpawnChanceOutOf100>
+               <CanRespawn>'true' or 'false'</CanRespawn>
             </SpawnConfiguration>
          </Creature>
       -->
@@ -15,19 +15,18 @@
     <Creature>
       <Name>Biter_02</Name>
       <SpawnConfiguration>
-        <!-- Enable/Disable the creature's spawn: `true` or `false` -->
-        <CanSpawn>true</CanSpawn>
-        <!-- Only used when CanSpawn is `true`. Range is from 0 to 100. -->
+        <!-- Range is from 0 to 100. 0 prevents the creature from ever spawning, 100 does not affect the creature's spawning.  -->
         <SpawnChanceOutOf100>50</SpawnChanceOutOf100>
+        <!-- Enable/Disable the creature's respawn: `true` or `false` -->
+        <CanRespawn>true</CanRespawn>
       </SpawnConfiguration>
     </Creature>
     <Creature>
       <!-- Works because <Name> is NOT case sensitive -->
       <Name>PEEper</Name>
       <SpawnConfiguration>
-        <CanSpawn>false</CanSpawn>
-        <!-- SpawnChanceOutOf100 is now ignored because CanSpawn is set to `false`. -->
         <SpawnChanceOutOf100>100</SpawnChanceOutOf100>
+        <CanRespawn>false</CanRespawn>
       </SpawnConfiguration>
     </Creature>
   </UnwantedCreatures>
