@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,24 +22,27 @@ namespace ManageCreatureSpawns {
 
       public static class Manager {
          public static bool TryKillCreature(Creature creature) {
-            if (creature != null && creature.enabled
-               && creature.gameObject != null)
+            if (creature != null
+			   && creature.enabled
+			   && creature.Friendliness.Value != 1
+			   && creature.version == 3
+			   && creature.gameObject != null)
             {
                var creatureConfiguration = settings.UnwantedCreaturesList.FirstOrDefault(c =>
                   c.Name.ToLowerInvariant() == creature.name.Replace("(Clone)", String.Empty).ToLowerInvariant());
                if (creatureConfiguration != null)
                {
-                  if (!creatureConfiguration.SpawnConfiguration.CanSpawn
-                     || rEngine.Next(0, 100) <= creatureConfiguration.SpawnConfiguration.SpawnChance)
+                  if (rEngine.Next(0, 100) >= creatureConfiguration.SpawnConfiguration.SpawnChance)
                   {
                      creature.tag = "Untagged";
+                     creature.version = 4;
                      creature.leashPosition = UnityEngine.Vector3.zero;
 
                      CreatureDeath cDeath = creature.gameObject.GetComponent<CreatureDeath>();
                      if (cDeath != null)
                      {
                         cDeath.eatable = null;
-                        cDeath.respawn = false;
+                        cDeath.respawn = creatureConfiguration.SpawnConfiguration.CanRespawn;
                         cDeath.removeCorpseAfterSeconds = 1.0f;
                      }
                      if (creature.liveMixin != null && creature.liveMixin.IsAlive())
@@ -58,6 +61,13 @@ namespace ManageCreatureSpawns {
                         creature.BroadcastMessage("OnKill");
                      }
                      return true;
+                  }
+				  else {
+                     creature.version = 4;
+                     CreatureDeath cDeath = creature.gameObject.GetComponent<CreatureDeath>();
+                     if (cDeath != null) {
+                        cDeath.respawn = creatureConfiguration.SpawnConfiguration.CanRespawn;
+                     }
                   }
                }
             }
