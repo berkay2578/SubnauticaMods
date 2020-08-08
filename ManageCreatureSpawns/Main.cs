@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
-using Harmony;
+using HarmonyLib;
 using ManageCreatureSpawns.SettingsManager;
 
 namespace ManageCreatureSpawns {
@@ -16,7 +16,7 @@ namespace ManageCreatureSpawns {
          Console.WriteLine("[ManageCreatureSpawns] {0}", logMessage);
       }
 
-      public static HarmonyInstance harmony = null;
+      public static Harmony harmony = null;
       public static Random rEngine = new Random();
       public static SettingsManager.Settings settings = null;
 
@@ -85,10 +85,10 @@ namespace ManageCreatureSpawns {
       public static void ApplyPatches() {
          log("Loading... v{0}", Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-         harmony = HarmonyInstance.Create("mod.berkay2578.managecreaturespawns");
+         harmony = new Harmony("mod.berkay2578.managecreaturespawns");
          if (harmony != null)
          {
-            log("HarmonyInstance created.");
+            log("Harmony instance created.");
 
             log("Reading settings.");
             {
