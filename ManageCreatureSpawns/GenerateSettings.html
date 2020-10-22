@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Manage Creature Spawn Settings</title>
+  <script>
+    let settings = {
+      "UnwantedCreatures": [
+      ]
+    };
+
+    let creatures = [
+      'Biter',
+      'Biter_02 <!-- Blighter -->',
+      'BirdBehaviour <!-- Bird creatures -->',
+      'Bladderfish',
+      'Bleeder',
+      'BloomCreature',
+      'BoneShark',
+      'Boomerang',
+      'BoomerangLava',
+      'CaveCrawler',
+      'CaveCrawler_03 <!-- BloodCrawler -->',
+      'CrabSnake',
+      'CrabSquid',
+      'Crash',
+      'CuteFish',
+      'Eyeye',
+      'EyeyeLava',
+      'Floater',
+      'Garryfish',
+      'GasoPod',
+      'GhostLeviatanVoid',
+      'GhostLeviathan',
+      'GhostRay',
+      'GhostRayBlue',
+      'GhostRayRed',
+      'Grabcrab',
+      'Grower',
+      'Holefish',
+      'Hoopfish',
+      'Hoverfish',
+      'Jellyray',
+      'Jumper',
+      'LavaLarva',
+      'LavaLizard',
+      'Leviathan',
+      'Mesmer',
+      'OculusFish',
+      'Peeper',
+      'RabbitRay',
+      'ReaperLeviathan',
+      'Reefback',
+      'Reginald',
+      'RockGrub',
+      'SandShark',
+      'SeaDragon',
+      'SeaEmperorBaby',
+      'SeaEmperorJuvenile',
+      'SeaTreader',
+      'Shocker',
+      'Slime',
+      'Skyray',
+      'Spadefish',
+      'SpineEel',
+      'Stalker',
+      'Warper'
+    ];
+
+    function generateDropdown(creatureNumber) {
+      //create dropdown from creature list
+      let dropdownNode = document.createElement("select");
+      dropdownNode.id="creature" + creatureNumber;
+
+      let inputs = [];
+      creatures.forEach((creature) => {
+        let textNode = document.createTextNode(creature);
+        let inputNode = document.createElement("option");
+        inputNode.value = creature;
+        inputNode.appendChild(textNode);
+        inputs.push(inputNode);
+      });
+
+      inputs.forEach((input) => {
+        dropdownNode.appendChild(input);
+      });
+
+      return dropdownNode;
+    }
+
+    let numCreatures = 0;
+
+    function generateCreature() {
+      numCreatures++;
+      let table = document.createElement("table");
+
+      let creatureRow = document.createElement("tr");
+      let creatureLabel = document.createElement("td");
+      creatureLabel.appendChild(document.createTextNode("Creature Name"));
+      let creatureSelect = document.createElement("td");
+      creatureSelect.appendChild(generateDropdown(numCreatures - 1));
+      creatureRow.appendChild(creatureLabel);
+      creatureRow.appendChild(creatureSelect);
+
+      let spawnRow = document.createElement("tr");
+      let spawnLabel = document.createElement("td");
+      spawnLabel.appendChild(document.createTextNode("Allow spawning"));
+      let spawnSelect = document.createElement("td");
+      let spawnSelectBox = document.createElement("input");
+      spawnSelectBox.id = "creature" + (numCreatures - 1) + "SpawnAllowed";
+      spawnSelectBox.setAttribute("type", "checkbox");
+      spawnSelectBox.checked = true;
+      spawnSelect.appendChild(spawnSelectBox);
+      spawnRow.appendChild(spawnLabel);
+      spawnRow.appendChild(spawnSelect);
+
+      let spawnChanceRow = document.createElement("tr");
+      let spawnChanceLabel = document.createElement("td");
+      spawnChanceLabel.appendChild(document.createTextNode("Spawn chance"));
+      let spawnChanceSelect = document.createElement("td");
+      let spawnChanceInput = document.createElement("input");
+      spawnChanceInput.id = "creature" + (numCreatures - 1) + "SpawnChance";
+      spawnChanceInput.setAttribute("type", "number");
+      spawnChanceInput.min = 0;
+      spawnChanceInput.max = 100;
+      spawnChanceInput.value = 100;
+      spawnChanceSelect.appendChild(spawnChanceInput);
+      spawnChanceSelect.appendChild(document.createTextNode("%"));
+      spawnChanceRow.appendChild(spawnChanceLabel);
+      spawnChanceRow.appendChild(spawnChanceSelect);
+
+      table.appendChild(creatureRow);
+      table.appendChild(spawnRow);
+      table.appendChild(spawnChanceRow);
+      let generateNode = document.getElementById("generateCreature");
+      document.getElementById("settings").insertBefore(table, generateNode);
+    }
+
+    function updateSettings() {
+      settings.UnwantedCreatures = [];
+      for(let i = 0; i < numCreatures; i++) {
+        let creatureInput = document.getElementById("creature" + i);
+        let spawnAllowedInput = document.getElementById("creature" + i + "SpawnAllowed");
+        let spawnChanceInput = document.getElementById("creature" + i + "SpawnChance");
+
+        let creatureName = creatureInput.value;
+        let spawnAllowed = spawnAllowedInput.checked;
+        let spawnChance = spawnChanceInput.value;
+        if(!spawnChance || spawnChance < 0) {
+          spawnChance = 0;
+        } else if (spawnChance > 100) {
+          spawnChance = 100;
+        }
+
+        let creature = {
+          "Name": creatureName,
+          "SpawnConfiguration": {
+            "CanSpawn": spawnAllowed,
+            "SpawnChanceOutOf100": spawnChance
+          }
+        };
+        settings.UnwantedCreatures.push(creature);
+      }
+    }
+
+    function generateSettings() {
+      updateSettings();
+
+      let indent = "  ";
+      let indentLevel = 0;
+      let indentString = "";
+      let settingsString = "";
+
+      settingsString += "<Settings>\n";
+      
+      indentLevel++;
+      indentString = getCurrentIndent(indent, indentLevel);
+      settingsString += indentString + "<UnwantedCreatures>\n"
+
+      indentLevel++;
+      indentString = getCurrentIndent(indent, indentLevel);
+      for(let i = 0; i < settings.UnwantedCreatures.length; i++) {
+        settingsString += indentString + "<Creature>\n"
+        
+        indentLevel++;
+        indentString = getCurrentIndent(indent, indentLevel);
+        settingsString += indentString + "<Name>" + settings.UnwantedCreatures[i].Name + "</Name>\n"
+
+        settingsString += indentString + "<SpawnConfiguration>\n";
+        
+        indentLevel++;
+        indentString = getCurrentIndent(indent, indentLevel);
+        settingsString += indentString + "<CanSpawn>" + settings.UnwantedCreatures[i].SpawnConfiguration.CanSpawn + "</CanSpawn>\n";
+
+        settingsString += indentString + "<SpawnChanceOutOf100>" + settings.UnwantedCreatures[i].SpawnConfiguration.SpawnChanceOutOf100 + 
+        "</SpawnChanceOutOf100>\n";
+
+        indentLevel--
+        indentString = getCurrentIndent(indent, indentLevel);
+        settingsString += indentString + "</SpawnConfiguration>\n";
+
+        indentLevel--
+        indentString = getCurrentIndent(indent, indentLevel);
+        settingsString += indentString + "</Creature>\n"
+      }
+      
+      indentLevel--;
+      indentString = getCurrentIndent(indent, indentLevel);
+      settingsString += indentString + "</UnwantedCreatures>\n"
+      
+      indentLevel--;
+      indentString = getCurrentIndent(indent, indentLevel);
+      settingsString += "</Settings>\n";
+
+      let textNode = document.createTextNode(settingsString);
+      let output = document.getElementById("output");
+      if(output.childNodes.length > 0) {
+        output.removeChild(output.childNodes[0]);
+      }
+      output.appendChild(textNode);
+    }
+
+    function getCurrentIndent(indent, indentLevel) {
+      let indentString = "";
+      for(let i = 0; i < indentLevel; i++) {
+        indentString += indent;
+      }
+      return indentString;
+    }
+  </script>
+</head>
+<body>
+	<div class="settings" id="settings">
+		<button onClick="generateCreature()" id="generateCreature">Add New Creature</button>
+		<button onclick="generateSettings()" id="generateSettings">Generate Settings</button>
+	</div>
+	<div class="output">
+		<pre id="output"></pre>
+	</div>
+	<script>
+		// You can also require other files to run in this process
+      require('./renderer.js')
+	</script>
+</body>
+
+</html>
