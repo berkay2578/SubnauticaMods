@@ -2,7 +2,7 @@
   "Id": "ManageCreatureSpawns",
   "DisplayName": "Manage Creature Spawns",
   "Author": "berkay(2578)",
-  "Version": "1.2.1.0",
+  "Version": "1.2.2.0",
   "Requires": [
     "0Harmony.dll"
   ],
