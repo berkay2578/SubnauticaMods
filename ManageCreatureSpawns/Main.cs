@@ -9,6 +9,8 @@ using System.Threading;
 using HarmonyLib;
 using ManageCreatureSpawns.SettingsManager;
 using QModManager.Utility;
+using QModManager.API;
+using System.Xml;
 
 namespace ManageCreatureSpawns
 {
@@ -41,14 +43,27 @@ namespace ManageCreatureSpawns
             private static readonly Mutex statsMutex = new Mutex();
             private static Dictionary<string, HashSet<Creature>> creatureMap = new Dictionary<string, HashSet<Creature>>();
             private static Dictionary<string, int> creaturesKilled = new Dictionary<string, int>();
+            private static HashSet<string> creaturesFound = new HashSet<string>();
 
             public static bool TryKillCreature(Creature creature)
             {
                 if (creature != null && creature.enabled
                    && creature.gameObject != null)
                 {
+                    string realName = creature.name.Replace("(Clone)", String.Empty);
                     var creatureConfiguration = settings.UnwantedCreaturesList.FirstOrDefault(c =>
-                       c.Name.ToLowerInvariant() == creature.name.Replace("(Clone)", String.Empty).ToLowerInvariant());
+                       c.Name.ToLowerInvariant() == realName.ToLowerInvariant());
+
+                    if (settings.IsDebugEnabled && settings.IsCreatureListEnabled)
+                    {
+                        if (creaturesFound.Add(realName))
+                        {
+                            List<string> listOfCreatures = creaturesFound.ToList();
+                            listOfCreatures.Sort();
+                            log(Logger.Level.Debug, "Found creatures:\n'{0}'", String.Join("',\n'", listOfCreatures));
+                        }
+                    }
+
                     if (creatureConfiguration != null)
                     {
                         randomMutex.WaitOne();
@@ -146,23 +161,14 @@ namespace ManageCreatureSpawns
             {
                 log("Harmony instance created.");
 
-                log("Reading settings.");
+                if(!LoadSettings())
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SettingsManager.Settings));
-                    using (StreamReader reader = new StreamReader("QMods\\ManageCreatureSpawns\\Settings.xml"))
-                        settings = (SettingsManager.Settings)serializer.Deserialize(reader);
-                    serializer = null;
+                    return;
+                }
 
-                    if (settings == null)
-                    {
-                        log(Logger.Level.Error, "Could not load settings, exiting.");
-                        return;
-                    }
-
-                    foreach (var item in settings.UnwantedCreaturesList)
-                    {
-                        log("Loaded creature configuration: \r\n{0}", item.ToString());
-                    }
+                foreach (var item in settings.UnwantedCreaturesList)
+                {
+                    log("Loaded creature configuration: \r\n{0}", item.ToString());
                 }
 
                 log("Patching Creature events");
@@ -187,6 +193,69 @@ namespace ManageCreatureSpawns
             {
                 log(Logger.Level.Error, "HarmonyInstance() returned null.");
             }
+        }
+
+        private static bool LoadSettings()
+        {
+            string location = QModServices.Main.GetMyMod().LoadedAssembly.Location;
+            log(Logger.Level.Debug, "mod location:  {0}", location);
+            DirectoryInfo dir = Directory.GetParent(location);
+            log(Logger.Level.Debug, "mod directory:  {0}", dir.FullName);
+            FileInfo[] settingsFiles = dir.GetFiles("Settings.xml");
+
+            if (settingsFiles.Length < 1)
+            {
+                AlertUser("Manage Creature Spawns could not find \"Settings.xml\" in mod folder. Manage Creature Spawns is now disabled.");
+                return false;
+            }
+            else if (settingsFiles.Length > 1)
+            {
+                List<string> settingsFilesNames = new List<string>();
+                settingsFiles.ForEach(file => { settingsFilesNames.Add(file.Name); });
+                log(Logger.Level.Warn, "Multiple settings files found. Using first one available. {0}", settingsFilesNames);
+            }
+            string settingsFileName = settingsFiles[0].FullName;
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SettingsManager.Settings));
+
+                log("Filtering out comments");
+                // load document
+                XmlDocument doc = new XmlDocument();
+                doc.Load(settingsFileName);
+
+                // remove all comments
+                XmlNodeList l = doc.SelectNodes("//comment()");
+                foreach (XmlNode node in l) node.ParentNode.RemoveChild(node);
+
+                // store to memory stream and rewind
+                MemoryStream ms = new MemoryStream();
+                doc.Save(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                log("Reading settings.");
+                settings = (SettingsManager.Settings)serializer.Deserialize(XmlReader.Create(ms));
+                serializer = null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(Logger.Level.Error, "Exception occurred while loading settings", ex);
+                AlertUser("Manage Creature Spawns could not load settings from \"Settings.xml\".  Manage Creature Spawns is now disabled.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void AlertUser(string message)
+        {
+            Thread t = new Thread(() =>
+            {
+                Thread.Sleep(10000);
+                Logger.Log(Logger.Level.Error, message, null, true);
+            });
+            t.Start();
         }
     }
 }

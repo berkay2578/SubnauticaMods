@@ -22,8 +22,13 @@ namespace ManageCreatureSpawns
         [XmlInclude(typeof(SpawnConfiguration))]
         public class Creature
         {
+            private string name = "Placeholder Name";
+
             [XmlElement("Name")]
-            public string Name { get; set; } = "Placeholder Name";
+            public string Name
+            {
+                get => name; set => name = value != null ? value.Trim() : "";
+            }
 
             [XmlElement("SpawnConfiguration")]
             public SpawnConfiguration SpawnConfiguration { get; set; } = null;
@@ -53,6 +58,9 @@ namespace ManageCreatureSpawns
 
             [XmlElement("IsDebugEnabled")]
             public bool IsDebugEnabled { get; set; } = false;
+
+            [XmlElement("IsCreatureListEnabled")]
+            public bool IsCreatureListEnabled { get; set; } = false;
         }
     }
 }
