@@ -1,0 +1,14 @@
+﻿{
+  "Id": "ManageCreatureSpawnsBelowZero",
+  "DisplayName": "Manage Creature Spawns Below Zero",
+  "Author": "berkay(2578)",
+  "Version": "0.0.0",
+  "Requires": [
+    "0Harmony.dll"
+  ],
+  "Enable": true,
+  "AssemblyName": "ManageCreatureSpawnsBelowZero.dll",
+  "EntryMethod": "ManageCreatureSpawns.Patcher.ApplyPatches",
+  "Priority": "Last",
+  "Game":  "BelowZero"
+}
