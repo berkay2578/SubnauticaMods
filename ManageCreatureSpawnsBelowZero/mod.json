@@ -2,7 +2,7 @@
   "Id": "ManageCreatureSpawnsBelowZero",
   "DisplayName": "Manage Creature Spawns Below Zero",
   "Author": "berkay(2578)",
-  "Version": "0.0.0",
+  "Version": "1.0.0",
   "Requires": [
     "0Harmony.dll"
   ],
