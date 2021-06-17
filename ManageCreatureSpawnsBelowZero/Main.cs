@@ -129,7 +129,6 @@ namespace ManageCreatureSpawns
                                     creature.liveMixin.data.passDamageDataOnDeath = false;
                                     creature.liveMixin.data.broadcastKillOnDeath = true;
                                     creature.liveMixin.data.destroyOnDeath = true;
-                                    creature.liveMixin.data.explodeOnDestroy = false;
                                 }
                                 creature.liveMixin.Kill();
                             }

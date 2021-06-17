@@ -1,0 +1,34 @@
+<Settings>
+  <UnwantedCreatures>
+    <!-- Creature a 'Creature' structure to control that creature's spawn. 
+         Look at `List of creatures.txt` for the names of the creatures. -->
+    <!--   
+         <Creature>
+            <Name>Creature's name goes here</Name>
+            <SpawnConfiguration>
+               <CanSpawn>'true' or 'false'</CanSpawn>
+               <SpawnChanceOutOf100>'0' to '100'</SpawnChanceOutOf100>
+            </SpawnConfiguration>
+         </Creature>
+      -->
+    <!-- For example: -->
+    <Creature>
+      <Name>Crash</Name>
+      <SpawnConfiguration>
+        <!-- Enable/Disable the creature's spawn: `true` or `false` -->
+        <CanSpawn>true</CanSpawn>
+        <!-- Only used when CanSpawn is `true`. Range is from 0 to 100. -->
+        <SpawnChanceOutOf100>50</SpawnChanceOutOf100>
+      </SpawnConfiguration>
+    </Creature>
+    <Creature>
+      <!-- Works because <Name> is NOT case sensitive -->
+      <Name>ArcticPEEper</Name>
+      <SpawnConfiguration>
+        <CanSpawn>false</CanSpawn>
+        <!-- SpawnChanceOutOf100 is now ignored because CanSpawn is set to `false`. -->
+        <SpawnChanceOutOf100>100</SpawnChanceOutOf100>
+      </SpawnConfiguration>
+    </Creature>
+  </UnwantedCreatures>
+</Settings>
