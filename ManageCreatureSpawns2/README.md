@@ -20,7 +20,7 @@ will work with BepInEx in 2.0.
 
 Manage Creature Spawns 2 with BepInEx creates its own configuration file with all the creatures in the base game
 included. You can find it in the config folder under the BepInEx folder. Follow the instructions below to configure
-Manage Creature Spawns 2. Note: as of version 2.0.0, only base game creatures can have their spawn configurations
+Manage Creature Spawns 2. Note: as of version 1.0.0, only base game creatures can have their spawn configurations
 modified. For all other creatures, you will have to use the legacy version or wait until a version that supports other
 creatures is made available.
 

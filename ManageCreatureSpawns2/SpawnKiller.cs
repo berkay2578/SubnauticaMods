@@ -77,7 +77,6 @@ namespace ManageCreatureSpawns2
             if (cDeath != null)
             {
                 cDeath.eatable = null;
-                cDeath.respawn = false;
                 cDeath.removeCorpseAfterSeconds = 1.0f;
             }
             if (creature.liveMixin != null && creature.liveMixin.IsAlive())
