@@ -8,8 +8,8 @@ namespace ManageCreatureSpawns2
     class CreatureConfig
     {
         public String name { get; set; }
-        public ConfigEntry<bool> canSpawn;
-        public ConfigEntry<int> spawnChance;
+        public bool canSpawn { get; set; }
+        public int spawnChance { get; set; }
     }
 
     enum CreatureName

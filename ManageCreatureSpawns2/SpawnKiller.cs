@@ -150,12 +150,12 @@ namespace ManageCreatureSpawns2
 
         private static bool ShouldKill(CreatureConfig config, int random)
         {
-            return !config.canSpawn.Value || random > config.spawnChance.Value;
+            return !config.canSpawn || random > config.spawnChance;
         }
 
         private static bool CanDie(CreatureConfig config)
         {
-            return !(config.canSpawn.Value && config.spawnChance.Value >= 100);
+            return !(config.canSpawn && config.spawnChance >= 100);
         }
     }
 }

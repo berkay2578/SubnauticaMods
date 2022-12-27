@@ -18,26 +18,39 @@ will work with BepInEx in 2.0.
 
 ## Configuration
 
-Manage Creature Spawns 2 with BepInEx creates its own configuration file with all the creatures in the base game
-included. You can find it in the config folder under the BepInEx folder. Follow the instructions below to configure
-Manage Creature Spawns 2. Note: as of version 1.0.0, only base game creatures can have their spawn configurations
-modified. For all other creatures, you will have to use the legacy version or wait until a version that supports other
-creatures is made available.
+Configuration for Manage Creature Spawns 2 works just like the original with a `Settings.xml` file that you use to set
+which creatures you would like to manage spawn rates for and an HTML page that provides the XML for anybody unfamiliar
+with XML.
 
-1. Locate the `ManageCreatureSpawns2.cfg` file in the config folder.
-2. Open in any text editor
-3. Browse or search for the creature you want to modify spawning rates for. I'll use the example `GhostRayBlue`.
-4. If you want to disable spawning completely, set the `CanSpawn` configuration for your creature to `false`. E.G.
-`GhostRayBlueCanSpawn = false`.
-5. If you want to change the spawn rate, leave the `CanSpawn` configuration as `true` and set the `SpawnChance` value
-to whatever percentage you want to adjust the spawn rate to (1-100). E.G. `GhostRayBlueSpawnChance = 30`. Note: this
-value can only be set to whole numbers. Anything below 1 will result in no spawning, and anything above 100 will result
-in default spawn rates. There is no way to increase the spawn rate of any creatures.
+If you're familiar with XML and editing .xml files, there are instructions for constructing the XML in the
+`Settings.xml` file. Just look up the creatures you want in the `List of creatures.txt` file and build your spawn
+configuration from there. If you're unfamiliar with XML or you want to go the easy route, follow the steps below.
+
+1. Open the `GenerateSettings.html` file in Google Chrome (this should work in any browser, but it was only tested in
+Chrome).
+2. Select "Subnautica" for your game.
+3. Click the "Add New Creature" button.
+4. Pick the creature you want to modify spawn rates of.
+5. Uncheck the box if you don't want the creature to ever spawn.
+6. Set the spawn percentage if you didn't uncheck the box. Only 0-100 are valid.
+7. If you are not done adding creatures, repeat steps 3-6. Otherwise, go to step 8.
+8. Click "Generate Settings"
+9. Copy all of the text that was created below.
+10. Open the `Settings.xml` file in a text editor. Note: Windows (and maybe other OSs) will try to open the file in a
+web browser instead of a text editor by default. You will not be able to edit the settings in the browser. You will
+need to tell your OS to open it with a text editor. In Windows, this can be done by right-clicking the file, then
+selecting "Open with" and selecting Notepad.
+11. Delete everything in this file.
+12. Paste the text you copied in step 9.
+13. Save and close the file. You're done.
+
+Note: While the name of this mod may suggest that you can increase spawn rates above 100%, that's not how this mod
+works. Anything above 100 will be treated as 100 (normal spawn rates).
 
 ## Nexus Mods
 
-This version of the mod does not exist on Nexus Mods at this time. The reason being that I am considering making
+This version of the mod does not exist on Nexus Mods at this time. The reason for this is that I am considering making
 another mod page and I have not reviewed TOS or any other rules as far as making sure that I am allowed to have
-effectively 2 of the same mod even though they don't support the same versions of the game, and they have different
+effectively 2 of the same mod even though they don't support the same versions of the game and they have different
 requirements. I expect that this won't be a problem and that this mod will become available on Nexus Mods soon enough,
-but for the time being, you will only be able to get this mod through my GitHub or any branches.
+but for the time being, you will only be able to get this mod through my GitHub or any forks.

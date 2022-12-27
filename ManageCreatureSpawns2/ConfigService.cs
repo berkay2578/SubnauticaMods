@@ -9,7 +9,7 @@ namespace ManageCreatureSpawns2
     {
         public ConfigEntry<bool> configIsDebuggingEnabled { get; set; }
         public  ConfigEntry<bool> configIsCreatureListEnabled { get; set; }
-        public Dictionary<string, CreatureConfig> unwantedCreatures { get; set; }
+        public Dictionary<string, CreatureConfig> unwantedCreatures { get; } = new Dictionary<string, CreatureConfig>();
 
         private ConfigService()
         {

@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using HarmonyLib;
 using System.Reflection;
-
+using System.IO;
+using System.Xml.Serialization;
+using System.Xml;
 
 namespace ManageCreatureSpawns2
 {
@@ -18,9 +20,29 @@ namespace ManageCreatureSpawns2
 
         private void Awake()
         {
+            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
             // Plugin startup logic
             BindConfig();
-            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+            SettingsManager.Settings settings;
+            try
+            {
+                settings = LoadCreatureSettings();
+            } catch(Exception ex)
+            {
+                Logger.LogError("Could not load creature settings");
+                Logger.LogError(ex);
+                return;
+            }
+
+            ConfigService cs = ConfigService.Instance;
+            settings.UnwantedCreaturesList.ForEach(creature =>
+            {
+                CreatureConfig config = new CreatureConfig();
+                config.name = creature.Name;
+                config.canSpawn = creature.SpawnConfiguration.CanSpawn;
+                config.spawnChance = creature.SpawnConfiguration.SpawnChance;
+                cs.unwantedCreatures[creature.Name.ToLowerInvariant()] = config;
+            });
 
             harmony = new Harmony(PluginInfo.PLUGIN_GUID);
             if(harmony != null)
@@ -56,16 +78,61 @@ namespace ManageCreatureSpawns2
                 false,
                 "Log all encountered creatures during session"
             );
+        }
 
-            configService.unwantedCreatures = new Dictionary<string, CreatureConfig>();
-            Array.ForEach(Enum.GetNames(typeof(CreatureName)), name =>
+        private SettingsManager.Settings LoadCreatureSettings()
+        {
+            SettingsManager.Settings settings = null;
+            string location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DirectoryInfo dir = new DirectoryInfo(location);
+            Logger.LogDebug($"mod directory:  {dir.FullName}");
+            FileInfo[] settingsFiles = dir.GetFiles("Settings.xml");
+
+            if (settingsFiles.Length < 1)
             {
-                CreatureConfig config = new CreatureConfig();
-                config.name = name;
-                config.canSpawn = Config.Bind("UnwantedCreatures", $"{name}CanSpawn", true, $"Set if {name} can spawn");
-                config.spawnChance = Config.Bind("UnwantedCreatures", $"{name}SpawnChance", 100, $"Set probability (in percentage) that {name} will spawn (0-100)");
-                configService.unwantedCreatures[name.ToLowerInvariant()] = config;
-            });
+                Logger.LogError("Manage Creature Spawns could not find \"Settings.xml\" in mod folder. Manage Creature Spawns is now disabled.");
+                throw new Exception("Could not find Settings.xml");
+            }
+            else if (settingsFiles.Length > 1)
+            {
+                List<string> settingsFilesNames = new List<string>();
+                settingsFiles.ForEach(file => { settingsFilesNames.Add(file.Name); });
+                Logger.LogWarning($"Multiple settings files found. Using first one available. {settingsFilesNames}");
+            }
+            string settingsFileName = settingsFiles[0].FullName;
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(SettingsManager.Settings));
+
+                Logger.LogInfo("Filtering out comments");
+                // load document
+                XmlDocument doc = new XmlDocument();
+                doc.Load(settingsFileName);
+
+                // remove all comments
+                XmlNodeList l = doc.SelectNodes("//comment()");
+                foreach (XmlNode node in l) node.ParentNode.RemoveChild(node);
+
+                // store to memory stream and rewind
+                MemoryStream ms = new MemoryStream();
+                doc.Save(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                Logger.LogInfo("Reading settings.");
+                settings = (SettingsManager.Settings)serializer.Deserialize(XmlReader.Create(ms));
+                serializer = null;
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Exception occurred while loading settings");
+                Logger.LogError(ex);
+                Logger.LogError("Manage Creature Spawns could not load settings from \"Settings.xml\".  Manage Creature Spawns is now disabled.");
+                throw new Exception("Could not load settings", ex);
+            }
+            Logger.LogInfo("Settings loaded");
+
+            return settings;
         }
     }
 }
