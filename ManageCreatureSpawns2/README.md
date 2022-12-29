@@ -11,12 +11,10 @@ will work with BepInEx in 2.0.
 ## Installing
 
 1. Install BepInEx. Instructions are included on the mod page.
-2. Copy the .zip file into the plugins folder of the BepInEx folder.
-3. Extract the .zip file. This should create a `ManageCreatureSpawns2` folder in your plugins folder with all of the
-   necessary files.
-4. Open the `ManageCreatureSpawns2` folder.
-5. Configure the mod (see below).
-6. Start playing
+2. Extract the .zip file into the plugins folder of the BepInEx folder.
+3. Open the `ManageCreatureSpawns2` folder.
+4. Configure the mod (see below).
+5. Start playing
 
 ## Configuration
 
@@ -108,17 +106,19 @@ in the pull request description.
 
 #### Mod Files
 
-Do not forget to load the files into the zip folder. The zip folder will be used for the Nexus Mods downloads and it
-must include all the required files to help people get the mod up and running. Zip all of the files at the .dll level
-so that extracting from the zip will, by default, unzip in the plugins folder into a `ManageCreatureSpawns2` folder
-if the installation instructions are followed exactly. Include the following files in your zip file.
+Minimize the amount of changes you do to the auxiliary files. Since these files are all intended to help the user set
+up their settings, the only changes done to them should be to better describe how to properly configure the settings.
+
+Do not forget to load the files into the zip folder. The zip folder will be used for the Nexus Mods download and it
+must include all the required files to help people get the mod up and running. Make sure to include all of the files
+below inside of a folder called `ManageCreatureSpawns2`. This will make it easier for users to extract the mod.
 
 * Mod files
   * ManageCreatureSpawns2.dll
   * ManageCreatureSpawns2.deps.json
   * ManageCreatureSpawns2.pdb
 * Settings files
-  * Settings.xml (use the one in the zip file from master)
+  * Settings.xml
   * Settings helpers
     * GenerateSettings.html
     * "List of creatures.txt"
