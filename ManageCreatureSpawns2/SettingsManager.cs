@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ManageCreatureSpawns
+namespace ManageCreatureSpawns2
 {
     namespace SettingsManager
     {
@@ -55,12 +55,6 @@ namespace ManageCreatureSpawns
             [XmlArray("UnwantedCreatures")]
             [XmlArrayItem("Creature")]
             public List<Creature> UnwantedCreaturesList { get; set; } = new List<Creature>();
-
-            [XmlElement("IsDebugEnabled")]
-            public bool IsDebugEnabled { get; set; } = false;
-
-            [XmlElement("IsCreatureListEnabled")]
-            public bool IsCreatureListEnabled { get; set; } = false;
         }
     }
 }
